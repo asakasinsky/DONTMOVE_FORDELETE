@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<FileZilla3>
+    <Servers>
+        <Server>
+            <Host>alfastar.asia</Host>
+            <Port>21</Port>
+            <Protocol>0</Protocol>
+            <Type>0</Type>
+            <User>v-17296_alfastar</User>
+            <Pass>123</Pass>
+            <Logontype>1</Logontype>
+            <TimezoneOffset>0</TimezoneOffset>
+            <PasvMode>MODE_DEFAULT</PasvMode>
+            <MaximumMultipleConnections>0</MaximumMultipleConnections>
+            <EncodingType>Auto</EncodingType>
+            <BypassProxy>0</BypassProxy>
+            <Name>ShopTehik</Name>
+            <Comments>&#x0A;&#x0A;FTP: v-17296_alfastar        пароль:123     хост: либо этот надо вводить v-17296&#x0A;либо домен alfastar.asia&#x0A;доступ к wp: alfastar.asia/wp-admin        юзер: admin          пароль: Cnhtrjpf6&#x0A;Sent on:&#x0A;&#x0A;2:15 pm&#x0A;From:&#x0A;Максим Близников&#x0A;&#x0A;vkz10.hoster.kz сервер</Comments>
+            <LocalDir />
+            <RemoteDir />
+            <SyncBrowsing>0</SyncBrowsing>ShopTehik&#x0A;        
+        </Server>
+        <Server>
+            <Host>vostok6.beget.com</Host>
+            <Port>21</Port>
+            <Protocol>0</Protocol>
+            <Type>0</Type>
+            <User>webmedab_pusk</User>
+            <Pass>Ld4p1JiP</Pass>
+            <Logontype>1</Logontype>
+            <TimezoneOffset>0</TimezoneOffset>
+            <PasvMode>MODE_DEFAULT</PasvMode>
+            <MaximumMultipleConnections>0</MaximumMultipleConnections>
+            <EncodingType>Auto</EncodingType>
+            <BypassProxy>0</BypassProxy>
+            <Name>baniAdaptawiya</Name>
+            <Comments>http://pusk39.ru/&#x0A;Фтп:&#x0A;vostok6.beget.com(5.101.157.101)&#x0A;webmedab_pusk&#x0A;Ld4p1JiP&#x0A;База&#x0A;https://vostok6.beget.com/phpMyAdmin/&#x0A;webmedab_pusk2&#x0A;!]2}9@&amp;A&#x0A;Админка:&#x0A;nkgjwqfhiznqzxmn&#x0A;g*SQaM$7iv$uvs9^E(b6Y</Comments>
+            <LocalDir />
+            <RemoteDir />
+            <SyncBrowsing>0</SyncBrowsing>baniAdaptawiya&#x0A;        
+        </Server>
+        <Server>
+            <Host>vostok6.beget.com</Host>
+            <Port>21</Port>
+            <Protocol>0</Protocol>
+            <Type>0</Type>
+            <User>webmedab_glavvent</User>
+            <Pass>1^[**!6n</Pass>
+            <Logontype>1</Logontype>
+            <TimezoneOffset>0</TimezoneOffset>
+            <PasvMode>MODE_DEFAULT</PasvMode>
+            <MaximumMultipleConnections>0</MaximumMultipleConnections>
+            <EncodingType>Auto</EncodingType>
+            <BypassProxy>0</BypassProxy>
+            <Name>conditioner</Name>
+            <Comments>vostok6.beget.com&#x0A;webmedab_glavvent&#x0A;1^[**!6n&#x0A;https://vostok6.beget.com/phpMyAdmin&#x0A;webmedab_glavven&#x0A;0l]?ltuT</Comments>
+            <LocalDir />
+            <RemoteDir />
+            <SyncBrowsing>0</SyncBrowsing>conditioner&#x0A;        
+        </Server>
+        <Server>
+            <Host>ftp.vam.nichost.ru</Host>
+            <Port>21</Port>
+            <Protocol>0</Protocol>
+            <Type>0</Type>
+            <User>vam_ftp</User>
+            <Pass>9WC_OSaK.</Pass>
+            <Logontype>1</Logontype>
+            <TimezoneOffset>0</TimezoneOffset>
+            <PasvMode>MODE_DEFAULT</PasvMode>
+            <MaximumMultipleConnections>0</MaximumMultipleConnections>
+            <EncodingType>Auto</EncodingType>
+            <BypassProxy>0</BypassProxy>
+            <Name>dressShopOPencart2</Name>
+            <Comments />
+            <LocalDir />
+            <RemoteDir />
+            <SyncBrowsing>0</SyncBrowsing>dressShopOPencart2&#x0A;        
+        </Server>
+        <Server>
+            <Host>ftp.vam.nichost.ru</Host>
+            <Port>21</Port>
+            <Protocol>0</Protocol>
+            <Type>0</Type>
+            <User>vam_ftp</User>
+            <Pass>9WC_OSaK.</Pass>
+            <Logontype>1</Logontype>
+            <TimezoneOffset>0</TimezoneOffset>
+            <PasvMode>MODE_ACTIVE</PasvMode>
+            <MaximumMultipleConnections>0</MaximumMultipleConnections>
+            <EncodingType>Auto</EncodingType>
+            <BypassProxy>0</BypassProxy>
+            <Name>dressShopOpencart</Name>
+            <Comments>&#x0A;&#x0A;ftp.vam.nichost.ru&#x0A;Для пользователя vam_ftp установлен пароль 9WC_OSaK.&#x0A;From:&#x0A;Максим Близников&#x0A;&#x0A;admin oSXN3d а это админка</Comments>
+            <LocalDir />
+            <RemoteDir />
+            <SyncBrowsing>0</SyncBrowsing>dressShopOpencart&#x0A;        
+        </Server>
+        <Server>
+            <Host>185.28.20.154</Host>
+            <Port>21</Port>
+            <Protocol>0</Protocol>
+            <Type>0</Type>
+            <User>u697601179</User>
+            <Pass>f6zrx6W6jAItIY7bU8</Pass>
+            <Logontype>1</Logontype>
+            <TimezoneOffset>0</TimezoneOffset>
+            <PasvMode>MODE_DEFAULT</PasvMode>
+            <MaximumMultipleConnections>0</MaximumMultipleConnections>
+            <EncodingType>Auto</EncodingType>
+            <BypassProxy>0</BypassProxy>
+            <Name>nordglass</Name>
+            <Comments />
+            <LocalDir />
+            <RemoteDir />
+            <SyncBrowsing>0</SyncBrowsing>nordglass&#x0A;        
+        </Server>
+        <Server>
+            <Host>lorenlorem.netai.net</Host>
+            <Port>21</Port>
+            <Protocol>0</Protocol>
+            <Type>0</Type>
+            <User>a2836329</User>
+            <Pass>/public_html</Pass>
+            <Logontype>1</Logontype>
+            <TimezoneOffset>0</TimezoneOffset>
+            <PasvMode>MODE_ACTIVE</PasvMode>
+            <MaximumMultipleConnections>0</MaximumMultipleConnections>
+            <EncodingType>Auto</EncodingType>
+            <BypassProxy>0</BypassProxy>
+            <Name>testHosting1</Name>
+            <Comments />
+            <LocalDir />
+            <RemoteDir>1 0 11 public_html</RemoteDir>
+            <SyncBrowsing>0</SyncBrowsing>testHosting1&#x0A;        
+        </Server>
+        <Server>
+            <Host>ftp.byethost7.com</Host>
+            <Port>21</Port>
+            <Protocol>0</Protocol>
+            <Type>0</Type>
+            <User>b7_18502344</User>
+            <Pass>Dublianu1982</Pass>
+            <Logontype>1</Logontype>
+            <TimezoneOffset>0</TimezoneOffset>
+            <PasvMode>MODE_DEFAULT</PasvMode>
+            <MaximumMultipleConnections>0</MaximumMultipleConnections>
+            <EncodingType>Auto</EncodingType>
+            <BypassProxy>0</BypassProxy>
+            <Name>testhost2</Name>
+            <Comments />
+            <LocalDir />
+            <RemoteDir />
+            <SyncBrowsing>0</SyncBrowsing>testhost2&#x0A;        
+        </Server>
+        <Server>
+            <Host>testfordel.atwebpages.com</Host>
+            <Port>21</Port>
+            <Protocol>0</Protocol>
+            <Type>0</Type>
+            <User>2074371</User>
+            <Pass>Dublianu1982</Pass>
+            <Logontype>1</Logontype>
+            <TimezoneOffset>0</TimezoneOffset>
+            <PasvMode>MODE_DEFAULT</PasvMode>
+            <MaximumMultipleConnections>0</MaximumMultipleConnections>
+            <EncodingType>UTF-8</EncodingType>
+            <BypassProxy>0</BypassProxy>
+            <Name>workHosting</Name>
+            <Comments />
+            <LocalDir />
+            <RemoteDir />
+            <SyncBrowsing>0</SyncBrowsing>workHosting&#x0A;        
+        </Server>
+    </Servers>
+</FileZilla3>
