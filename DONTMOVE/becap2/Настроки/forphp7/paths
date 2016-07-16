@@ -1,0 +1,3 @@
+/opt/lampp/etc/httpd.conf
+/opt/lampp/etc/extra/httpd-vhosts.conf
+/etc/hosts
