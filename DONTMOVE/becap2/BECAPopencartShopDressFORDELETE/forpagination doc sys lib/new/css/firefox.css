@@ -1,0 +1,116 @@
+.tovar_number_1:hover {
+    border: 3px solid #003333;
+    outline: 0px solid;
+    box-shadow: none;
+    margin: 0px 5px 25px 6px;
+}
+
+
+.bottomProduct {
+    left:-2.5px;
+}
+.tovar_number_1:hover:nth-child(5n) {
+    margin: 0px 5px 25xpx 6px;
+}
+.tovar_number_1:hover:nth-child(5n) .bottomProduct {
+    width:242px;
+}
+.tovar_number_1:hover:nth-last-child(1) .rightGallery, .tovar_number_1:hover:nth-last-child(2) .rightGallery, .tovar_number_1:hover:nth-last-child(3) .rightGallery, .tovar_number_1:hover:nth-last-child(4) .rightGallery, .tovar_number_1:hover:nth-last-child(5) .rightGallery {
+    top: -3px!important;
+ }
+.tovar_number_1:hover:nth-last-child(1) .bottomProduct, .tovar_number_1:hover:nth-last-child(2) .bottomProduct, .tovar_number_1:hover:nth-last-child(3) .bottomProduct, .tovar_number_1:hover:nth-last-child(4) .bottomProduct, .tovar_number_1:hover:nth-last-child(5) .bottomProduct {
+    width:242px;
+}
+@media screen and (max-width: 1170px) and (min-width: 640px) {
+  .bistriiSee{
+    display: none !important;
+  }
+  
+  .middleSlide_catalog h1{
+  padding-left: 10px;
+  }
+  
+    .rightGallery {
+        top: -3px;
+    }    
+    .tovar_number_1:hover .bottomProduct, .tovar_number_1:hover:nth-child(5n) .bottomProduct, .tovar_number_1:hover:nth-child(2n) .bottomProduct, .tovar_number_1:hover:nth-child(2n) .bottomProduct, .tovar_number_1:hover:nth-last-child(1) .bottomProduct, .tovar_number_1:hover:nth-last-child(2) .bottomProduct, .tovar_number_1:hover:nth-last-child(3) .bottomProduct, .tovar_number_1:hover:nth-last-child(4) .bottomProduct, .tovar_number_1:hover:nth-last-child(5) .bottomProduct {
+        width:241.5px;   
+        bottom:-85px;
+     }
+    .tovar_number_1:hover:nth-child(5n), .tovar_number_1:hover:nth-child(2n) {
+        margin:0px 63px 33px 0px;
+    }
+    .tovar_number_1:hover{
+        margin:0px 63px 31px 0px;
+    }
+    .tovar_number_1:hover:nth-child(2n) .rightGallery, .tovar_number_1:hover:nth-child(2n) .rightGallery {
+        top: -2px;
+    }
+  
+}
+@media screen and (max-width: 640px){
+  .bistriiSee{
+    display: none !important;
+  }
+  
+  .middleSlide_catalog h1{
+  padding-left: 10px;
+  }
+  .button_block {
+    margin: 5px 28px;
+  }
+  
+    .tovarLine1 {
+        width:244px;
+    }
+    .tovar_number_1:hover:nth-child(5n) .bottomProduct, .tovar_number_1:hover .bottomProduct {
+        width:233px;
+        height: 100px !important;
+        left: -3px !important;
+    }
+    
+    .tovar_number_1 .navMobileProduct {
+        position: absolute;
+        top: 7px;
+    }
+    .tovar_number_1:hover:nth-last-child(1) .bottomProduct, .tovar_number_1:hover:nth-last-child(2) .bottomProduct, .tovar_number_1:hover:nth-last-child(3) .bottomProduct, .tovar_number_1:hover:nth-last-child(4) .bottomProduct, .tovar_number_1:hover:nth-last-child(5) .bottomProduct {
+        width: 232.5px;
+    }
+  
+    .tovar_number_1:hover {
+    border: 3px solid #003333;
+    outline: 0px solid;
+    box-shadow: none;
+    margin: 0px 3px 70px 3px;
+}
+  
+  .tovar_number_1{
+    position: relative;
+  }
+  
+  
+  .tovar_number_1:hover .navMobileProduct{
+    left: 29px;
+  } 
+  
+}
+
+.tovar_number_1:hover .bottomProduct, .tovar_number_1:hover:nth-child(5n) .bottomProduct, .tovar_number_1:hover:nth-child(4n) .bottomProduct {
+        left:-3px;
+      height: 100px;
+      	border-left: 3px solid #003333;
+    border-right: 3px solid #003333;
+    border-bottom: 3px solid #003333;
+    }
+.tovar_number_1:hover:nth-child(5n) .bottomProduct{
+  left:-47px;
+}
+
+.tovar_number_1:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.tovar_number_1:hover {
+        border-bottom: 0;
+}

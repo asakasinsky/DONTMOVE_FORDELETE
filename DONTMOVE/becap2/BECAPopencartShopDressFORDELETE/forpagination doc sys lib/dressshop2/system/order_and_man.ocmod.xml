@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <name>Статус заказа в списке заказов и производитель в товарах заказа</name>
+    <version>1.1</version>
+    <link>http://reformerstudio.ru/old/</link>
+    <code>bt-ocmod-order-status-alexx</code>
+    <author>Boris Tim</author>
+    <file path="admin/view/template/sale/order_list.tpl">
+        <operation>
+            <search><![CDATA[<form method="post" enctype="multipart/form-data" target="_blank" id="form-order">]]></search>
+            <add position="before"><![CDATA[
+            <?php
+            $order_status_colors =array(1=>'color:black',3=>'color:green',15=>'color:green',9=>'color:orange',11=>'color:orange',2=>'color:red',7=>'color:gray',8=>'color:black',21=>'color:red',23=>'color:red',22=>'color:green',24=>'color:green');
+            ?>]]></add>
+        </operation>
+        <operation error="skip">
+            <search><![CDATA[<td class="text-left"><?php echo $order['status']; ?></td>]]></search>
+            <add position="replace"><![CDATA[
+            <td style="<?php print isset($order_status_colors[$order['order_status_id']]) ? $order_status_colors[$order['order_status_id']] : 'color:black';?>">
+            <?php $tmp = "<select class='order-status' data-order_id='$order[order_id]'";
+            $tmp .= <<<JS
+            onchange="$.ajax({
+            url:'/admin/index.php?route=sale/order/updatestate&token=$token',
+            type:'post',
+            data: 'order_id='+$(this).data('order_id')+'&state_id='+$(this).val(),
+            success:function(data){
+            console.log(data);
+            }
+            })"
+JS;
+            $tmp .= ">";
+            foreach($order_statuses as $status_array){
+                $style = isset($order_status_colors[$status_array['order_status_id']]) ? $order_status_colors[$status_array['order_status_id']] : 'color:black';
+                $tmp .= "<option style='$style' value='$status_array[order_status_id]'"
+                        .($order['order_status_id'] == $status_array['order_status_id'] ? ' selected="selected"' : '')
+                        .">$status_array[name]</option>";
+            }
+            print $tmp.'</select>'; ?>
+            </td>
+            ]]></add>
+        </operation>
+    </file>
+    <file path="admin/controller/sale/order.php">
+        <operation>
+            <search><![CDATA['status'        => $result['status'],]]></search>
+            <add position="after"><![CDATA['order_status_id'    =>  $result['order_status_id'],]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[public function add() {]]></search>
+            <add position="before"><![CDATA[	public function updatestate(){
+            $this->load->model('sale/order');
+		$results = $this->model_sale_order->updateOrderStatus($this->request->post);
+		$this->response->setOutput(json_encode($results));
+	}]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA['order_product_id' => $product['order_product_id'],]]></search>
+            <add position="after"><![CDATA[
+            'mf_name' => $product['mf_name'],
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA['model'    => $product['model'],]]></search>
+            <add position="after"><![CDATA[
+            'mf_name' => $product['mf_name'],
+			'image' 	 => $image,
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[$this->model_sale_order->getOrderOptions($order_id, $product['order_product_id']);]]></search>
+            <add position="after"><![CDATA[
+				$this->load->model('catalog/product');
+				$temp_product = $this->load->model_catalog_product->getProduct($product['product_id']);
+				if ($temp_product['image']) {
+					$image = $this->model_tool_image->resize($temp_product['image'], 100, 100);
+				} else {
+					$image = $this->model_tool_image->resize('placeholder.png', 100, 100);
+				}
+            ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/view/template/sale/order_info.tpl">
+        <operation>
+            <search><![CDATA[<?php echo $column_product; ?>]]></search>
+            <add position="after"><![CDATA[</td><td class="text-left">Производитель]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[<?php echo $product['model']; ?>]]></search>
+            <add position="before"><![CDATA[</td><td class="text-left"><?php echo $product['mf_name']; ?>]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/model/sale/order.php">
+        <operation>
+            <search><![CDATA['comment'                 => $order_query->row['comment'],]]></search>
+            <add position="after"><![CDATA[
+                   'is_ordered'                 => $order_query->row['is_ordered'],
+                     ]]></add>
+        </operation>
+        <!--<operation>
+            <search trim="true"><![CDATA['customer'      => $result['customer'],]]></search>
+            <add position="after"><![CDATA['is_ordered'      => $result['is_ordered'],]]></add>
+        </operation>-->
+        
+        <operation>
+            <search>
+                <![CDATA[$sql = "SELECT o.order_id, CONCAT(o.firstname, ' ', o.lastname) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, o.shipping_code, o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified FROM `" . DB_PREFIX . "order` o";]]></search>
+            <add position="replace">
+                <![CDATA[$sql = "SELECT o.order_status_id, o.is_ordered, o.order_id, CONCAT(o.firstname, ' ', o.lastname) AS customer,
+                (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id
+                AND os.language_id = '" .
+                (int)$this->config->get('config_language_id') . "') AS status,
+                o.shipping_code, o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified
+                FROM `" . DB_PREFIX . "order` o";]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");]]></search>
+            <add position="replace"><![CDATA[
+            $sql = "SELECT o.*,m.name mf_name FROM " . DB_PREFIX . "order_product o
+left join " . DB_PREFIX . "product p on (o.product_id = p.product_id)
+left join " . DB_PREFIX . "manufacturer m on (p.manufacturer_id = m.manufacturer_id)
+ WHERE o.order_id = ".intval($order_id);
+            $query = $this->db->query($sql);
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[class ModelSaleOrder extends Model {]]></search>
+            <add position="after"><![CDATA[
+            public function updateOrderStatus($data){
+            $state = intval($data['state_id']);
+             $id = intval($data['order_id']);
+            $this->db->query("Update `" . DB_PREFIX . "order` set order_status_id = $state where order_id = $id" );
+            $this->db->query("Insert into `" . DB_PREFIX . "order_history` set order_id = $id,order_status_id = $state,date_added = now(),comment = 'Edited from orders list'");
+            }
+            ]]></add>
+        </operation>
+    </file>
+</modification>

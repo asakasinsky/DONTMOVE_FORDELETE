@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Modification Default</name>
+  <code>default</code>
+  <version>1.0</version>
+  <author>OpenCart Ltd</author>
+  <link>http://www.opencart.com</link>
+
+       <file path="admin/controller/catalog/category.php">
+           <operation>
+               <search><![CDATA[
+                $data['entry_description'] = $this->language->get('entry_description');
+                ]]></search>
+               <add position="before"><![CDATA[
+                  		$data['entry_bottom_description'] = $this->language->get('entry_bottom_description');
+                ]]></add>
+           </operation>
+       </file>
+       <file path="admin/model/catalog/category.php">
+               <operation>
+                   <search><![CDATA[$this->db->query("INSERT INTO " . DB_PREFIX . "category_description SET]]></search>
+                   <add position="after"><![CDATA[
+   			$this->db->query("UPDATE " . DB_PREFIX . "category_description SET bottom_description = '" . $this->db->escape($value['bottom_description']) . "' WHERE category_id = '" . (int)$category_id . "' AND language_id = '" . (int)$language_id . "'");
+                    ]]></add>
+               </operation>
+           <operation>
+               <search><![CDATA['meta_description' => $result['meta_description'],]]></search>
+               <add position="after"><![CDATA[
+                    'bottom_description' => $result['bottom_description'],
+                    ]]>
+               </add>
+           </operation>
+       </file>
+
+
+
+    <file path="catalog/controller/common/header.php">
+        <operation>
+            <search><![CDATA[$data['name'] = $this->config->get('config_name');]]></search>
+            <add position="after"><![CDATA[
+                          $data['informations_href'] = $this->url->link('record/blog', 'blog_id=1');
+                        ]]>
+            </add>
+        </operation>
+    </file>
+
+    <file path="catalog/controller/product/product.php">
+        <operation>
+            <search><![CDATA[if ($product_info) {]]></search>
+            <add position="before"><![CDATA[
+                $show_disabled_product = false;
+                if($product_info && $product_info['stock_status_id'] == 5) {
+                    $show_disabled_product = true;
+                }
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product.tpl')) {]]></search>
+            <add position="before"><![CDATA[
+                if($show_disabled_product) {
+                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product_no_status.tpl')) {
+                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/product_no_status.tpl', $data));
+                    } else {
+                        $this->response->setOutput($this->load->view('default/template/product/product_no_status.tpl', $data));
+                    }
+                    return;
+                }
+                if(isset($this->request->get['ajax']) && $this->request->get['ajax'] == "y") {
+                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product_ajax.tpl')) {
+                        $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/product_ajax.tpl', $data));
+                    } else {
+                        $this->response->setOutput($this->load->view('default/template/product/product_ajax.tpl', $data));
+                    }
+                    return;
+                }
+            ]]></add>
+        </operation>
+    </file>
+
+</modification>

@@ -1,0 +1,58 @@
+<modification>
+    <name>AlsoBought by iSenseLabs</name>
+    <version>2.2</version>
+    <link>http://isenselabs.com</link>
+    <author>iSenseLabs</author>
+	<code>isenselabs_alsobought</code>
+    
+    <file path="catalog/model/checkout/order.php">
+		<operation>
+			<search><![CDATA[$data['products'] = array();]]></search>
+			<add position="after"><![CDATA[
+				$this->catchAlsoBought($order_product_query->rows);
+					]]></add>
+		</operation>
+	</file>
+
+	<file path="catalog/model/checkout/order.php">
+		<operation>
+			<search><![CDATA[class ModelCheckoutOrder extends Model {]]></search>
+			<add position="after"><![CDATA[
+		public function catchAlsoBought($products) {
+		$alsoBought = array();
+		foreach ($products as $product) {
+			$alsoBought[] = $product['product_id'];
+		
+		}
+		sort($alsoBought);
+		
+		$groupedAlsoBought = array();
+		foreach ($alsoBought as $k => $b) {
+			for ($i=1; $i<count($alsoBought); $i++) {
+				if (!empty($alsoBought[$k+$i])) {
+					$groupedAlsoBought[] = array('low'=>$b,'high'=>$alsoBought[$k+$i]);
+				}
+			}
+		}
+		
+		foreach($groupedAlsoBought as $p) {
+			$pairExists = $this->db->query("SELECT * FROM `" . DB_PREFIX . "alsobought` WHERE `low` = ".$p['low']." AND `high` = ".$p['high']);
+			
+			if (empty($pairExists->rows)) {
+				$this->db->query("INSERT INTO `" . DB_PREFIX . "alsobought` SET `low` = ".$p['low'].", `high`=".$p['high'].",`number` = 1, `date_added`=NOW()");
+			} else {
+				foreach ($pairExists->rows as $rec) {
+					$this->db->query("UPDATE `" . DB_PREFIX . "alsobought` SET `number` = " . ((int)$rec['number']+1) . " WHERE `id`=".$rec['id']);
+				}
+			}
+			
+				
+		}
+	
+	
+	}
+					]]></add>
+		</operation>
+	</file>
+
+</modification>

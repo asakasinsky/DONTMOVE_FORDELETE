@@ -1,0 +1,10 @@
+@media screen and (max-width: 1170px) and (min-width: 640px) {
+    .tovar_number_1.openProdus .bottomProduct, .tovar_number_1.openProdus .bottomProduct {
+        width:242px ;
+        left:-3px !important;
+    }    
+  .tovar_number_1.openProdus:nth-child(2n) .bottomProduct{
+    width: 241px;
+  }
+   
+}

@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Modification Default</name>
+  <code>default</code>
+  <version>1.0</version>
+  <author>OpenCart Ltd</author>
+  <link>http://www.opencart.com</link>
+  <file path="system/{engine,library}/{action,loader,config,language}*.php">
+    <operation>
+      <search regex="true">
+        <![CDATA[~(require|include)(_once)?\(([^)]+)~]]>
+      </search>
+      <add position="replace">
+        <![CDATA[$1$2(modification($3)]]>
+      </add>
+    </operation>
+  </file>
+  <file path="catalog/controller/product/category.php">
+    <operation>
+      <search>
+        <![CDATA[$pagination = new Pagination();]]>
+      </search>
+      <add position="replace"><![CDATA[
+                        $pagination = new MyPagination();
+                        $pagination->num_links = 3;
+      ]]></add>
+    </operation>
+    <operation>
+      <search>
+        <![CDATA[$data['products'][] = array(]]>
+      </search>
+      <add position="replace">
+        <![CDATA[
+                        $timestamp = time();
+                        $date_time_array = getdate($timestamp);
+                        $hours = $date_time_array['hours'];
+                        $minutes = $date_time_array['minutes'];
+                        $seconds = $date_time_array['seconds'];
+                        $month = $date_time_array['mon'];
+                        $day = $date_time_array['mday'];
+                        $year = $date_time_array['year'];
+                        //устанавливается что считать новинками
+                        $timestamp = mktime($hours,$minutes,$seconds,$month,$day - $this->config->get('config_days_new_product'),$year);
+                        if (($result['date_available'] ) > strftime('%Y-%m-%d',$timestamp)) $new_product = true;
+                        else $new_product = false;
+
+                        $options = array();
+
+                        foreach ($this->model_catalog_product->getProductOptions($result['product_id']) as $option) {
+                                $product_option_value_data = array();
+
+                                foreach ($option['product_option_value'] as $option_value) {
+                                        if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
+                                                if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$option_value['price']) {
+                                                        $price_option = $this->currency->format($this->tax->calculate($option_value['price'], $result['tax_class_id'], $this->config->get('config_tax') ? 'P' : false));
+                                                } else {
+                                                        $price_option = false;
+                                                }
+
+                                                $product_option_value_data[] = array(
+                                                        'product_option_value_id' => $option_value['product_option_value_id'],
+                                                        'option_value_id'         => $option_value['option_value_id'],
+                                                        'name'                    => $option_value['name'],
+                                                        'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+                                                        'price'                   => $price_option,
+                                                        'price_prefix'            => $option_value['price_prefix']
+                                                );
+                                        }
+                                }
+
+                                $options[] = array(
+                                        'product_option_id'    => $option['product_option_id'],
+                                        'product_option_value' => $product_option_value_data,
+                                        'option_id'            => $option['option_id'],
+                                        'name'                 => $option['name'],
+                                        'type'                 => $option['type'],
+                                        'value'                => $option['value'],
+                                        'required'             => $option['required']
+                                );
+                        }
+
+
+                        $data['products'][] = array(
+                        'options' => $options,
+                        'new_product' => $new_product,
+        ]]>
+      </add>
+    </operation>
+      <operation>
+           <search>
+             <![CDATA[$data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8')]]>
+           </search>
+           <add position="after"><![CDATA[
+                   $data['bottom_description'] = html_entity_decode($category_info['bottom_description'], ENT_QUOTES, 'UTF-8');
+           ]]></add>
+         </operation>
+  </file>
+
+  <file path="catalog/controller/product/search.php">
+    <operation>
+      <search>
+        <![CDATA[$pagination = new Pagination();]]>
+      </search>
+      <add position="replace"><![CDATA[
+                        $pagination = new MyPagination();
+                        $pagination->num_links = 3;
+      ]]></add>
+    </operation>
+    <operation>
+      <search>
+        <![CDATA[$data['products'][] = array(]]>
+      </search>
+      <add position="replace">
+        <![CDATA[
+                        $timestamp = time();
+                        $date_time_array = getdate($timestamp);
+                        $hours = $date_time_array['hours'];
+                        $minutes = $date_time_array['minutes'];
+                        $seconds = $date_time_array['seconds'];
+                        $month = $date_time_array['mon'];
+                        $day = $date_time_array['mday'];
+                        $year = $date_time_array['year'];
+                        //устанавливается что считать новинками
+                        $timestamp = mktime($hours,$minutes,$seconds,$month,$day - $this->config->get('config_days_new_product'),$year);
+                        if (($result['date_available'] ) > strftime('%Y-%m-%d',$timestamp)) $new_product = true;
+                        else $new_product = false;
+
+                        $options = array();
+
+                        foreach ($this->model_catalog_product->getProductOptions($result['product_id']) as $option) {
+                                $product_option_value_data = array();
+
+                                foreach ($option['product_option_value'] as $option_value) {
+                                        if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
+                                                if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$option_value['price']) {
+                                                        $price_option = $this->currency->format($this->tax->calculate($option_value['price'], $result['tax_class_id'], $this->config->get('config_tax') ? 'P' : false));
+                                                } else {
+                                                        $price_option = false;
+                                                }
+
+                                                $product_option_value_data[] = array(
+                                                        'product_option_value_id' => $option_value['product_option_value_id'],
+                                                        'option_value_id'         => $option_value['option_value_id'],
+                                                        'name'                    => $option_value['name'],
+                                                        'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+                                                        'price'                   => $price_option,
+                                                        'price_prefix'            => $option_value['price_prefix']
+                                                );
+                                        }
+                                }
+
+                                $options[] = array(
+                                        'product_option_id'    => $option['product_option_id'],
+                                        'product_option_value' => $product_option_value_data,
+                                        'option_id'            => $option['option_id'],
+                                        'name'                 => $option['name'],
+                                        'type'                 => $option['type'],
+                                        'value'                => $option['value'],
+                                        'required'             => $option['required']
+                                );
+                        }
+
+
+                        $data['products'][] = array(
+                        'options' => $options,
+                        'new_product' => $new_product,
+        ]]>
+      </add>
+    </operation>
+  </file>
+  
+  <file path="catalog/controller/account/wishlist.php">
+    <operation>
+      <search>
+        <![CDATA[
+$json['info'] = sprintf($this->language->get('text_exists'), $this->url->link('product/product', 'product_id=' . (int)$this->request->post['product_id']), $product_info['name'], $this->url->link('account/wishlist'));
+]]>
+      </search>
+      <add position="replace"><![CDATA[
+          $array = $this->session->data['wishlist'];
+          if (isset($array))          
+          if(FALSE !== $key = array_search($this->request->post['product_id'],$array)) {
+            unset($this->session->data['wishlist'][$key]);
+             $this->model_catalog_product->updateLiked($this->request->post['product_id'], false);
+          }
+      ]]></add>
+    </operation>
+      <operation>
+           <search>
+             <![CDATA[$this->response->addHeader('Content-Type: application/json');]]>
+           </search>
+           <add position="before"><![CDATA[
+                 if(!empty($product_info)) {
+                    $product_info = $this->model_catalog_product->getProductWithoutStatus($product_id);
+                    $json['total_likes'] =  $product_info['liked'];
+                }
+           ]]></add>
+      </operation>
+      <operation>
+          <search>
+                  <![CDATA[$product_info = $this->model_catalog_product->getProduct($product_id);]]>
+          </search>
+          <add position="after"><![CDATA[
+                if(!$product_info) {
+                    $product_info = $this->model_catalog_product->getProductWithoutStatus($product_id);
+                }
+        ]]></add>
+      </operation>
+    <operation>
+      <search>
+        <![CDATA[$this->session->data['wishlist'][]]]>
+      </search>
+      <add position="before"><![CDATA[
+          $this->model_catalog_product->updateLiked($this->request->post['product_id']);
+      ]]></add>
+    </operation>
+    <operation>
+      <search>
+        <![CDATA[$this->response->redirect($this->url->link('account/login', '', 'SSL'));]]>
+      </search>
+      <add position="replace"><![CDATA[
+          //$this->response->redirect($this->url->link('account/login', '', 'SSL'));
+      ]]></add>
+    </operation>
+    <operation>
+      <search>
+        <![CDATA[$data['products'] = array();]]>
+      </search>
+      <add position="before"><![CDATA[
+            $url = '';
+
+            if (isset($this->request->get['filter'])) {
+                    $url .= '&filter=' . $this->request->get['filter'];
+            }
+
+            if (isset($this->request->get['sort'])) {
+                    $url .= '&sort=' . $this->request->get['sort'];
+            }
+
+            if (isset($this->request->get['order'])) {
+                    $url .= '&order=' . $this->request->get['order'];
+            }
+
+            if (isset($this->request->get['limit'])) {
+                    $url .= '&limit=' . $this->request->get['limit'];
+            }
+
+            if (isset($this->request->get['page'])) {
+                    $page = $this->request->get['page'];
+            } else {
+                    $page = 1;
+            }
+
+            if (isset($this->request->get['limit'])) {
+                    $limit = $this->request->get['limit'];
+            } else {
+                    $limit = $this->config->get('config_product_limit');
+            }
+            $product_total = count($this->session->data['wishlist']);
+
+            $pagination = new MyPagination();
+            $pagination->total = $product_total;
+            $pagination->page = $page;
+            $pagination->limit = $limit;
+            $pagination->num_links = 3;
+            $pagination->url = $this->url->link('account/wishlist', $url . '&page={page}');
+
+            $data['pagination'] = $pagination->render();
+          
+          $images = $this->model_catalog_product->getProductImagesForProducts();
+      ]]></add>
+    </operation>
+    <operation>
+      <search>
+        <![CDATA[$data['products'][] = array(]]>
+      </search>
+      <add position="replace">
+        <![CDATA[
+                        $this->load->model('catalog/category');
+                        $category = $this->model_catalog_product->getCategories($product_id);
+                        $category = array_pop($category);
+                        $category_info = $this->model_catalog_category->getCategory($category["category_id"]);
+                                
+                        $timestamp = time();
+                        $date_time_array = getdate($timestamp);
+                        $hours = $date_time_array['hours'];
+                        $minutes = $date_time_array['minutes'];
+                        $seconds = $date_time_array['seconds'];
+                        $month = $date_time_array['mon'];
+                        $day = $date_time_array['mday'];
+                        $year = $date_time_array['year'];
+                        //устанавливается что считать новинками
+                        $timestamp = mktime($hours,$minutes,$seconds,$month,$day - $this->config->get('config_days_new_product'),$year);
+                        if (($product_info['date_available'] ) > strftime('%Y-%m-%d',$timestamp)) $new_product = true;
+                        else $new_product = false;
+
+                        $options = array();
+
+                        foreach ($this->model_catalog_product->getProductOptions($product_id) as $option) {
+                                $product_option_value_data = array();
+
+                                foreach ($option['product_option_value'] as $option_value) {
+                                        if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
+                                                if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$option_value['price']) {
+                                                        $price_option = $this->currency->format($this->tax->calculate($option_value['price'], $product_info['tax_class_id'], $this->config->get('config_tax') ? 'P' : false));
+                                                } else {
+                                                        $price_option = false;
+                                                }
+
+                                                $product_option_value_data[] = array(
+                                                        'product_option_value_id' => $option_value['product_option_value_id'],
+                                                        'option_value_id'         => $option_value['option_value_id'],
+                                                        'name'                    => $option_value['name'],
+                                                        'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+                                                        'price'                   => $price_option,
+                                                        'price_prefix'            => $option_value['price_prefix']
+                                                );
+                                        }
+                                }
+
+                                $options[] = array(
+                                        'product_option_id'    => $option['product_option_id'],
+                                        'product_option_value' => $product_option_value_data,
+                                        'option_id'            => $option['option_id'],
+                                        'name'                 => $option['name'],
+                                        'type'                 => $option['type'],
+                                        'value'                => $option['value'],
+                                        'required'             => $option['required']
+                                );
+                        }
+
+                        $photos = array();
+                        $photos[$product_id][] = $image;
+                        if(isset($images[$product_id])){
+                           foreach($images[$product_id] as $image){
+                                        $photos[$product_id][] = $this->model_tool_image->resize($image['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                                } 
+                        }
+
+                        $data['products'][] = array(
+                            'quantity'    => $product_info['quantity'], 
+                            'category_name' => isset($category_info['name']) ? $category_info['name'] : "",
+                            'new_product' => $new_product,
+                            'options' => $options,
+                            'images'      => $photos,
+        ]]>
+      </add>
+    </operation>
+  </file>
+
+  <file path="catalog/model/catalog/product.php">
+    <operation>
+      <search>
+        <![CDATA[return array(]]>
+      </search>
+      <add position="before"><![CDATA[
+                if ($this->customer->isLogged()) {
+                    $discount = (100 - $this->config->get('config_customer_discount'))/100;
+                    if (!$query->row['special']) {
+                        $query->row['discount'] = $discount*$query->row['discount'];
+                        //$query->row['price'] = $discount*$query->row['price'];
+                        $query->row['special'] = $discount*$query->row['price'];
+                    }
+                    else {
+                        $query->row['discount'] = $discount*$query->row['discount'];
+                        //$query->row['price'] = $discount*$query->row['price'];
+                        $query->row['special'] = $discount*$query->row['special'];
+                    }
+                }
+        ]]></add>
+    </operation>
+      <operation>
+          <search>
+              <![CDATA['location'         => $query->row['location'],]]>
+          </search>
+          <add position="before"><![CDATA[
+          'liked' => $query->row['liked'],
+          'show_sizes' => $query->row['show_sizes'],
+          ]]></add>
+      </operation>
+
+  </file>
+
+  <file path="system/library/cart.php">
+    <operation>
+      <search>
+        <![CDATA[$this->data[$key] = array(]]>
+      </search>
+      <add position="before"><![CDATA[
+                if ($this->customer->isLogged()) {
+                    $discount = (100 - $this->config->get('config_customer_discount'))/100;
+                    $price = $discount*$price;
+                    $option_price = $discount*$option_price;
+                }
+        ]]></add>
+    </operation>
+  </file>
+    
+  <file path="catalog/controller/product/product.php">
+      <operation>
+          <search>
+              <![CDATA[public function write() {]]>
+          </search>
+          <add position="before"><![CDATA[
+              private function declOfNum($number, $titles) {
+                        $cases = array (2, 0, 1, 1, 1, 2);
+                        return $titles[ ($number%100 > 4 && $number %100 < 20) ? 2 : $cases[min($number%10, 5)] ];
+              }
+            ]]></add>
+      </operation>
+    <operation>
+      <search>
+        <![CDATA[$this->model_catalog_product->updateViewed($this->request->get['product_id']);]]>
+      </search>
+      <add position="after"><![CDATA[
+          if (isset($category_info['name'])) {
+                $data["category_name"] = $category_info['name'];
+                $data["category_description"] = isset($category_info['description']) ? $category_info['description'] : "";
+            } else {
+                $data["category_name"] = "";
+                $data["category_description"] = "";
+            }
+            $timestamp = time();
+            $date_time_array = getdate($timestamp);
+            $hours = $date_time_array['hours'];
+            $minutes = $date_time_array['minutes'];
+            $seconds = $date_time_array['seconds'];
+            $month = $date_time_array['mon'];
+            $day = $date_time_array['mday'];
+            $year = $date_time_array['year'];
+            //устанавливается что считать новинками
+            $timestamp = mktime($hours,$minutes,$seconds,$month,$day - $this->config->get('config_days_new_product'),$year);
+            if (($product_info['date_available'] ) > strftime('%Y-%m-%d',$timestamp)) $new_product = true;
+            else $new_product = false;
+          
+            (isset($this->session->data['wishlist']) && in_array($product_id, $this->session->data['wishlist'])) ? $is_liked = true : $is_liked = false;
+            $data["is_liked"] = $is_liked;
+
+            $data['show_sizes'] = $product_info['show_sizes'];
+            $data['liked'] = $product_info['liked'];
+            $data['liked_text'] = sprintf('Понравилось <span>%s</span> %s', $data['liked'], $this->declOfNum($data['liked'], array('клиенту', 'клиентам', 'клиентам')));
+      ]]></add>
+    </operation>
+    <operation>
+      <search>
+        <![CDATA[$data['products'] = array();]]>
+      </search>
+      <add position="before"><![CDATA[
+        $images = $this->model_catalog_product->getProductImagesForProducts();
+      ]]></add>
+    </operation>
+    <operation>
+      <search>
+        <![CDATA[$data['products'][] = array(]]>
+      </search>
+      <add position="After"><![CDATA[
+                        $this->load->model('catalog/category');
+                        $category = $this->model_catalog_product->getCategories($result['product_id']);
+                        $category = array_pop($category);
+                        $category_info = $this->model_catalog_category->getCategory($category["category_id"]);
+                                
+                        $timestamp = time();
+                        $date_time_array = getdate($timestamp);
+                        $hours = $date_time_array['hours'];
+                        $minutes = $date_time_array['minutes'];
+                        $seconds = $date_time_array['seconds'];
+                        $month = $date_time_array['mon'];
+                        $day = $date_time_array['mday'];
+                        $year = $date_time_array['year'];
+                        //устанавливается что считать новинками
+                        $timestamp = mktime($hours,$minutes,$seconds,$month,$day - $this->config->get('config_days_new_product'),$year);
+                        if (($product_info['date_available'] ) > strftime('%Y-%m-%d',$timestamp)) $new_product = true;
+                        else $new_product = false;
+
+                        $options = array();
+
+                        foreach ($this->model_catalog_product->getProductOptions($result['product_id']) as $option) {
+                                $product_option_value_data = array();
+
+                                foreach ($option['product_option_value'] as $option_value) {
+                                        if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
+                                                if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$option_value['price']) {
+                                                        $price_option = $this->currency->format($this->tax->calculate($option_value['price'], $product_info['tax_class_id'], $this->config->get('config_tax') ? 'P' : false));
+                                                } else {
+                                                        $price_option = false;
+                                                }
+
+                                                $product_option_value_data[] = array(
+                                                        'product_option_value_id' => $option_value['product_option_value_id'],
+                                                        'option_value_id'         => $option_value['option_value_id'],
+                                                        'name'                    => $option_value['name'],
+                                                        'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+                                                        'price'                   => $price_option,
+                                                        'price_prefix'            => $option_value['price_prefix']
+                                                );
+                                        }
+                                }
+
+                                $options[] = array(
+                                        'product_option_id'    => $option['product_option_id'],
+                                        'product_option_value' => $product_option_value_data,
+                                        'option_id'            => $option['option_id'],
+                                        'name'                 => $option['name'],
+                                        'type'                 => $option['type'],
+                                        'value'                => $option['value'],
+                                        'required'             => $option['required']
+                                );
+                        }
+
+                        $photos = array();
+                        $photos[$result['product_id']][] = $image;
+                        if(isset($images[$result['product_id']])){
+                           foreach($images[$result['product_id']] as $image){
+                                        $photos[$result['product_id']][] = $this->model_tool_image->resize($image['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                                } 
+                        }
+                        (isset($this->session->data['wishlist']) && in_array($result['product_id'], $this->session->data['wishlist'])) ? $is_liked = true : $is_liked = false;
+
+                        $data['products'][] = array(
+                            'is_liked' => $is_liked,
+                            'quantity'    => $product_info['quantity'], 
+                            'category_name' => isset($category_info['name']) ? $category_info['name'] : "",
+                            'new_product' => $new_product,
+                            'options' => $options,
+                            'images'      => $photos,
+      ]]></add>
+    </operation>
+    <operation>
+      <search>
+        <![CDATA[public function write()]]>
+      </search>
+      <add position="before"><![CDATA[
+          public function removeViewed() {
+            setcookie('viewed', "", time() + 60 * 60 * 24 * 30, '/', $this->request->server['HTTP_HOST']);
+            $this->session->data['viewed'] = "";
+        }
+      ]]></add>
+    </operation>
+    <operation>
+      <search>
+        <![CDATA[$data['points'] = $product_info['points'];]]>
+      </search>
+      <add position="after">
+        <![CDATA[
+              $data['stock_status_id'] = $product_info['stock_status_id'];
+        ]]>
+      </add>
+    </operation>
+    <operation>
+      <search>
+        <![CDATA[
+        $this->model_catalog_review->addReview
+        ]]>
+      </search>
+      <add position="after">
+        <![CDATA[
+            $question['product_id'] = $this->request->get['product_id'];
+
+            // product form
+            $this->load->model('module/reviews');
+            $question['name'] = trim(strip_tags(htmlspecialchars_decode($this->request->post['name'])));
+            $question['email'] = ($this->customer->isLogged()) ? $this->customer->getEmail() : "";
+            $question['question_text'] = trim(strip_tags(htmlspecialchars_decode($this->request->post['text'])));
+            $question['customer_language_id'] = $this->model_module_reviews->getLangIdByCode($this->customer->session->data['language']);
+            $question['customer_id'] = ($this->customer->isLogged()) ? $this->customer->getId() : 0;
+            $this->model_module_reviews->addQuestion($question);
+        ]]>
+      </add>
+    </operation>
+  </file>
+  <file path="catalog/controller/common/header.php">
+    <operation>
+      <search>
+        <![CDATA[$data['telephone'] = $this->config->get('config_telephone');]]>
+      </search>
+      <add position="after"><![CDATA[
+        $data['viewed'] = $this->url->link('product/viewed', '', 'SSL');
+        $products = array();
+
+        if (isset($this->request->cookie['viewed'])) {
+            $products = explode(',', $this->request->cookie['viewed']);            
+        } else if (isset($this->session->data['viewed'])) {
+            $products = $this->session->data['viewed'];
+        }
+        ($products) ? $data['viewed_count'] = count($products) : $data['viewed_count'] = 0;
+      ]]></add>
+    </operation>
+  </file>
+  <file path="admin/controller/setting/setting.php">
+    <operation>
+      <search><![CDATA[
+        (isset($this->request->post['config_customer_online']))
+      ]]></search>
+      <add position="before"><![CDATA[
+		if (isset($this->request->post['config_customer_discount'])) {
+			$data['config_customer_discount'] = $this->request->post['config_customer_discount'];
+		} else {
+			$data['config_customer_discount'] = $this->config->get('config_customer_discount');
+		}
+
+		if (isset($this->request->post['config_days_new_product'])) {
+			$data['config_days_new_product'] = $this->request->post['config_days_new_product'];
+		} else {
+			$data['config_days_new_product'] = $this->config->get('config_days_new_product');
+		}
+      ]]></add>
+    </operation>
+  </file>
+
+    <file path="admin/controller/catalog/product.php">
+        <operation>
+          <search><![CDATA[
+           $data['entry_name'] = $this->language->get('entry_name');
+          ]]></search>
+          <add position="before"><![CDATA[
+            $data['entry_liked'] = $this->language->get('entry_liked');
+             $data['entry_show_sizes'] = $this->language->get('entry_show_sizes');
+    		$data['help_liked'] = $this->language->get('help_liked');
+
+          ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[
+                 if (isset($this->request->post['image'])) {
+            ]]></search>
+                 <add position="before"><![CDATA[
+                 if (isset($this->request->post['liked'])) {
+               			$data['liked'] = $this->request->post['liked'];
+               		} elseif (!empty($product_info)) {
+               			$data['liked'] = $product_info['liked'];
+               		} else {
+               			$data['liked'] = 0;
+               		}
+
+                if (isset($this->request->post['show_sizes'])) {
+               			$data['show_sizes'] = $this->request->post['show_sizes'];
+               		} elseif (!empty($product_info)) {
+               			$data['show_sizes'] = $product_info['show_sizes'];
+               		} else {
+               			$data['show_sizes'] = 0;
+               		}
+                 ]]></add>
+        </operation>
+    </file>
+
+    <file path="admin/model/catalog/product.php">
+          <operation>
+            <search><![CDATA[
+            if (isset($data['image'])) {
+            ]]></search>
+            <add position="before"><![CDATA[
+                 $liked = !empty($data['liked']) ? (int) $data['liked'] : 0;
+		        $this->db->query("UPDATE " . DB_PREFIX . "product SET liked = '" . $liked . "' WHERE product_id = '" . (int)$product_id . "'");
+		         $show_sizes = !empty($data['show_sizes']) ? (int) $data['show_sizes'] : 0;
+		        $this->db->query("UPDATE " . DB_PREFIX . "product SET show_sizes = '" . $show_sizes . "' WHERE product_id = '" . (int)$product_id . "'");
+
+            ]]></add>
+          </operation>
+    </file>
+
+    <file path="admin/controller/sale/order.php">
+        <operation>
+            <search><![CDATA[
+               public function api() {
+            ]]></search>
+            <add position="before"><![CDATA[
+            public function addTrack() {
+                $this->load->model('sale/order');
+
+                $order_id = $this->request->post['order_id'];
+                $track = $this->request->post['track'];
+                $order_info = $this->model_sale_order->getOrder($order_id);
+
+                $json = array();
+
+                if(!$track || !$order_id || !$order_info) {
+                    $json['error'] = true;
+                }
+                else {
+                    $user_name = $order_info['firstname'] . ' ' . $order_info['lastname'];
+                    $subject = sprintf('%s - Обновление заказа %s', html_entity_decode($order_info['store_name'], ENT_QUOTES, 'UTF-8'), $order_id);
+                    $message = "Добрый день $user_name, Ваша посылка была отправлена - трек номер посылки $track,
+                        с помощью него Вы сможете отследить где находится посылка на сайте почты России.
+                        Перейдите по ссылке и увидите, где Ваша посылка находится  <a href='https://www.pochta.ru/tracking#$track'>https://www.pochta.ru/tracking#$track</a><br/>
+                        Будем рады, если Вы оставите свой отзыв о нашем магазине <a href='http://tdekor.ru/reviews'>http://tdekor.ru/reviews</a> <br/>
+                        <br/>
+                        Если появились вопросы – обязательно задавайте их.<br/>
+                        С уважением команда Tdekor.ru
+                    ";
+
+                    $mail = new Mail($this->config->get('config_mail'));
+                    $mail->setTo($order_info['email']);
+                    $mail->setFrom($this->config->get('config_email'));
+                    $mail->setSender($order_info['store_name']);
+                    $mail->setSubject($subject);
+                    $mail->setHtml($message);
+                    $mail->send();
+
+                    $json['comment'] = $message;
+                    $json['success'] = true;
+                }
+
+
+                $this->response->addHeader('Content-Type: application/json');
+                $this->response->setOutput(json_encode($json));
+	        }
+
+	        public function setOrdered() {
+	                $this->load->model('sale/order');
+                    $order_id = (int)$this->request->post['order_id'];
+                    $is_ordered = isset($this->request->post['is_ordered']) && $this->request->post['is_ordered'] ? 1 : 0;
+                    $order_info = $this->model_sale_order->getOrder($order_id);
+                    $json = array();
+
+                    if(!$order_id || !$order_info) {
+                        $json['error'] = true;
+                    }
+                    else {
+                        $json['success'] = true;
+                        $this->db->query("UPDATE ". DB_PREFIX."order SET is_ordered = '$is_ordered' WHERE order_id = $order_id");
+                    }
+
+                    $this->response->addHeader('Content-Type: application/json');
+                    $this->response->setOutput(json_encode($json));
+	        }
+            ]]></add>
+        </operation>
+        <operation>
+            <search><![CDATA[$data['comment'] = nl2br($order_info['comment']);]]></search>
+            <add position="after"><![CDATA[$data['is_ordered'] = $order_info['is_ordered'];]]>
+            </add>
+        </operation>
+        <operation>
+            <search><![CDATA['customer'      => $result['customer'],]]></search>
+            <add position="after"><![CDATA['is_ordered'      => $result['is_ordered'],]]></add>
+        </operation>
+    </file>
+
+
+</modification>
